@@ -52,7 +52,56 @@ namespace ComputerShopAPI.Controllers
             {
                 return StatusCode(400, new { message = "Hibás lekérdezés", result = exception.Message });
             }
-            
         }
+        [HttpPut("updateOsystem")]
+        public object UpdateOsystem([FromQuery] Guid id, [FromQuery] UpdateOsystemDTO updateOsystemDTO)
+        {
+            var osystem = _context.Osystems.FirstOrDefault(osystem => osystem.Id == id);
+            Exception exception = new();
+            if (osystem != null)
+            {
+                osystem.Name = updateOsystemDTO.Name;
+                osystem.version = updateOsystemDTO.Version;
+                osystem.updateTime = DateTime.Now;
+
+                _context.Osystems.Update(osystem);
+                _context.SaveChanges();
+
+                return StatusCode(200, new { message = "Sikeres frissítés", result = osystem });
+            }
+            else if (osystem == null)
+            {
+                return StatusCode(404, new { message = "Nincs ilyen ID-vel osystem", result = osystem });
+            }
+            else
+            {
+                return StatusCode(400, new { message = "Hiba a frissítésben", result = osystem });
+            }
+        }
+
+        [HttpDelete]
+
+        public object DeleteOsystem([FromQuery] Guid id)
+        {
+            var osystem = _context.Osystems.SingleOrDefault(osystem => osystem.Id == id);
+            Exception exception = new();
+            if (osystem != null)
+            {
+
+                _context.Osystems.Remove(osystem);
+                _context.SaveChanges();
+
+                return StatusCode(200, new { message = "Sikeres törlés", result = osystem });
+            }
+            else if (osystem == null)
+            {
+                return StatusCode(404, new { message = "Nincs ilyen ID-vel osystem", result = osystem });
+            }
+            else
+            {
+                return StatusCode(400, new { message = "Hiba a frissítésben", result = osystem });
+            }
+        }
+
     }
 }

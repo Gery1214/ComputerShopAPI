@@ -14,5 +14,15 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ComputerShopAPI.Controllers.OsystemController",
+    "Method": "GetAllOsystem",
+    "RelativePath": "osystems/getAllOsystem",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

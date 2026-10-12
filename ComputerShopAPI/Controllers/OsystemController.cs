@@ -33,5 +33,26 @@ namespace ComputerShopAPI.Controllers
             }
             return StatusCode(400, new { message = "Sikertelen felvétel", result = osystem });
         }
+
+        [HttpGet("getAllOsystem")]
+        public object GetAllOsystem()
+        {
+            var osystem = _context.Osystems.ToList();
+            Exception exception = new();
+
+            if (osystem.Count > 0)
+            {
+                return StatusCode(200, new { message = "Sikeres lekérdezés", result = osystem });
+            }
+            else if (osystem.Count < 1)
+            {
+                return StatusCode(200, new { message = "Üres tábla", result = osystem });
+            }
+            else 
+            {
+                return StatusCode(400, new { message = "Hibás lekérdezés", result = exception.Message });
+            }
+            
+        }
     }
 }

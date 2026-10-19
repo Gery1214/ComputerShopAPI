@@ -2,6 +2,7 @@
 using ComputerShopAPI.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ComputerShopAPI.Controllers
 {
@@ -34,7 +35,7 @@ namespace ComputerShopAPI.Controllers
             return StatusCode(400, new { message = "Sikertelen felvétel", result = osystem });
         }
 
-        [HttpGet("getAllOsystem")]
+        [HttpGet("GetAllOsystem")]
         public object GetAllOsystem()
         {
             var osystem = _context.Osystems.ToList();
@@ -53,7 +54,7 @@ namespace ComputerShopAPI.Controllers
                 return StatusCode(400, new { message = "Hibás lekérdezés", result = exception.Message });
             }
         }
-        [HttpPut("updateOsystem")]
+        [HttpPut("UpdateOsystem")]
         public object UpdateOsystem([FromQuery] Guid id, [FromQuery] UpdateOsystemDTO updateOsystemDTO)
         {
             var osystem = _context.Osystems.FirstOrDefault(osystem => osystem.Id == id);
@@ -79,7 +80,7 @@ namespace ComputerShopAPI.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("deleteOsystemById")]
 
         public object DeleteOsystem([FromQuery] Guid id)
         {
@@ -103,5 +104,22 @@ namespace ComputerShopAPI.Controllers
             }
         }
 
+        [HttpGet("AllOsystemsWithComputer")]
+        public object AllOsystemsWithComputer()
+        {
+            var osystems = _context.Osystems.Include(osystem => osystem.Computers);
+
+            return StatusCode(200, new { message = "Sikeres lekérdezés", result = osystems });
+        }
+
+        [HttpGet("GetOsystemWithComputers")]
+        public object GetOsystemWithComputers([FromQuery]Guid id)
+        {
+            var osystem = _context.Osystems.SingleOrDefault(osystem => osystem.Id == id);
+
+            var computers = _context.Computers.Where(computer => computer.OsId == osystem.Id);
+
+            return StatusCode(200, new { message = "Sikeres lekérdezés", result = new { osystem.Name, computers }});
+        }
     }
 }
